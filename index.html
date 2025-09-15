@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TON Storage Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-cube"></i> TON Storage Manager</h1>
+                <div class="connection-status" id="connectionStatus">
+                    <i class="fas fa-circle"></i>
+                    <span>未連接</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Connection Settings -->
+        <section class="connection-panel" id="connectionPanel">
+            <div class="panel-header">
+                <h2><i class="fas fa-plug"></i> 連接設置</h2>
+            </div>
+            <div class="panel-content">
+                <div class="form-group">
+                    <label for="serverIp">服務器 IP:</label>
+                    <input type="text" id="serverIp" value="127.0.0.1" placeholder="例: 192.168.1.100">
+                </div>
+                <div class="form-group">
+                    <label for="serverPort">端口:</label>
+                    <input type="number" id="serverPort" value="11699" placeholder="例: 8192">
+                </div>
+                <div class="form-group">
+                    <label for="username">用戶名 (可選):</label>
+                    <input type="text" id="username" placeholder="用戶名">
+                </div>
+                <div class="form-group">
+                    <label for="password">密碼 (可選):</label>
+                    <input type="password" id="password" placeholder="密碼">
+                </div>
+                <button class="btn btn-primary" onclick="connectToServer()">
+                    <i class="fas fa-plug"></i> 連接
+                </button>
+                <button class="btn btn-secondary" onclick="testConnection()">
+                    <i class="fas fa-heartbeat"></i> 測試連接
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent" style="display: none;">
+            <!-- Statistics Dashboard -->
+            <section class="stats-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-chart-bar"></i> 統計概覽</h2>
+                    <button class="btn btn-small" onclick="refreshStats()">
+                        <i class="fas fa-sync-alt"></i> 刷新
+                    </button>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-download"></i></div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalDownloading">0</div>
+                            <div class="stat-label">正在下載</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalCompleted">0</div>
+                            <div class="stat-label">已完成</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalPeers">0</div>
+                            <div class="stat-label">總連接數</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalSpeed">0</div>
+                            <div class="stat-label">總速度 (MB/s)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Add New Download -->
+            <section class="add-download-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-plus-circle"></i> 添加新下載</h2>
+                </div>
+                <div class="panel-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bagId">Bag ID:</label>
+                            <input type="text" id="bagId" placeholder="例: 85d0998dcf325b6fee4f529d4dcf66fb253fc39c59687c82a0ef7fc96fed4c9f">
+                        </div>
+                        <div class="form-group">
+                            <label for="downloadPath">下載路径:</label>
+                            <input type="text" id="downloadPath" placeholder="例: /downloads">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success" onclick="addDownload()">
+                                <i class="fas fa-plus"></i> 添加下載
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Downloads List -->
+            <section class="downloads-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-list"></i> 下載列表</h2>
+                    <div class="panel-controls">
+                        <button class="btn btn-small" onclick="refreshDownloads()">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                        <button class="btn btn-small btn-danger" onclick="clearCompleted()">
+                            <i class="fas fa-trash"></i> 清理已完成
+                        </button>
+                    </div>
+                </div>
+                <div class="downloads-container" id="downloadsContainer">
+                    <!-- Downloads will be populated here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <div>載入中...</div>
+            </div>
+        </div>
+
+        <!-- Toast Messages -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
