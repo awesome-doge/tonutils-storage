@@ -3,12 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Storage Manager</title>
+    <title>TON Storage Manager (HTTP版本)</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .http-notice {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(237, 137, 54, 0.3);
+        }
+        .http-notice i {
+            margin-right: 12px;
+            font-size: 1.25rem;
+        }
+        .http-notice strong {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- HTTP版本提醒 -->
+        <div class="http-notice">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>HTTP版本</strong>此版本可以連接到本地 HTTP API，但僅建議在安全的本地網絡環境中使用。
+                <a href="index.html" style="color: #fff; text-decoration: underline; margin-left: 10px;">切換到HTTPS版本</a>
+            </div>
+        </div>
+
         <!-- Header -->
         <header class="header">
             <div class="header-content">
@@ -19,15 +47,6 @@
                 </div>
             </div>
         </header>
-
-        <!-- HTTPS 提醒 -->
-        <div class="https-notice" id="httpsNotice" style="display: none;">
-            <i class="fas fa-shield-alt"></i>
-            <div>
-                <strong>HTTPS安全提醒：</strong>此HTTPS頁面可能無法連接到本地HTTP API，如遇到連接問題請
-                <a href="index-http.html" style="color: #fff; text-decoration: underline; margin-left: 5px;">使用HTTP版本</a>
-            </div>
-        </div>
 
         <!-- Connection Settings -->
         <section class="connection-panel" id="connectionPanel">

@@ -62,14 +62,26 @@ async function testConnection() {
     showLoading(true);
     
     try {
-        const response = await fetch(`${testEndpoint}/api/v1/list`);
+        const response = await fetch(`${testEndpoint}/api/v1/list`, {
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         if (response.ok) {
             showToast('連接測試成功', 'success');
         } else {
-            showToast('連接測試失敗', 'error');
+            showToast(`連接測試失敗: HTTP ${response.status}`, 'error');
         }
     } catch (error) {
-        showToast(`連接測試失敗: ${error.message}`, 'error');
+        if (error.message.includes('CORS')) {
+            showToast('CORS 錯誤：請確保 TON Storage 允許跨域請求', 'error');
+        } else if (error.message.includes('Mixed Content')) {
+            showToast('安全限制：HTTPS 頁面無法連接 HTTP API', 'error');
+        } else {
+            showToast(`連接測試失敗: ${error.message}`, 'error');
+        }
+        console.error('Connection test error:', error);
     } finally {
         showLoading(false);
     }
@@ -98,7 +110,16 @@ async function connectToServer() {
     } catch (error) {
         isConnected = false;
         updateConnectionStatus('連接失敗', 'error');
-        showToast(`連接失敗: ${error.message}`, 'error');
+        
+        let errorMsg = error.message;
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+            errorMsg = 'CORS 或網路錯誤：請檢查服務器設置和跨域權限';
+        } else if (error.message.includes('Mixed Content')) {
+            errorMsg = '安全限制：HTTPS 頁面無法連接 HTTP API，請使用 HTTP 版本的頁面';
+        }
+        
+        showToast(`連接失敗: ${errorMsg}`, 'error');
+        console.error('Connection error:', error);
     } finally {
         showLoading(false);
     }
@@ -511,6 +532,9 @@ async function clearCompleted() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // 初始化時隱藏載入畫面
+    showLoading(false);
+    
     const savedIp = localStorage.getItem('tonStorage_serverIp');
     const savedPort = localStorage.getItem('tonStorage_serverPort');
     
@@ -530,6 +554,14 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+    
+    // 檢查是否在 HTTPS 環境中
+    if (location.protocol === 'https:') {
+        const httpsNotice = document.getElementById('httpsNotice');
+        if (httpsNotice) {
+            httpsNotice.style.display = 'flex';
+        }
+    }
 });
 
 window.addEventListener('beforeunload', function() {

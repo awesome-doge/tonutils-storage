@@ -633,6 +633,26 @@ section {
     font-weight: 500;
 }
 
+.https-notice {
+    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    color: white;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(66, 153, 225, 0.3);
+}
+
+.https-notice i {
+    margin-right: 12px;
+    font-size: 1.25rem;
+}
+
+.https-notice strong {
+    margin-right: 8px;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 10px;
